@@ -16,7 +16,7 @@ cd sfe-tech-task-react
 ```sh
 cd backend
 npm install
-node server.js
+node index.js
 ```
 The backend will run on [http://localhost:3000](http://localhost:3000/).
 
@@ -35,7 +35,7 @@ The frontend will run on [http://localhost:5173](http://localhost:5173/).
 
 ### 🔐 Auth
 - Login page and auth state management using Zustand.
-- Backend API accepts hardcoded credentials (`admin`/`admin`).
+- Backend API accepts hardcoded credentials (`admin`/`admin123`).
 - Token is stored in Zustand after login.
 
 ### 👥 User Management

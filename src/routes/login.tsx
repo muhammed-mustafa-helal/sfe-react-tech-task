@@ -1,6 +1,9 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { useAuthStore } from '../store/auth';
+import { FormItem, FormLabel } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {Button} from "@/components/ui/button.tsx";
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -19,7 +22,7 @@ function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('http://localhost:3000/login', {
+      const res = await fetch('http://localhost:3000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -40,34 +43,34 @@ function LoginPage() {
       <div className="w-full max-w-md p-8 bg-card rounded-lg shadow">
         <h1 className="text-2xl font-bold mb-6">Login</h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <label className="block mb-1 font-medium">Username</label>
-            <input
-              className="input input-bordered w-full"
+          <FormItem>
+            <FormLabel htmlFor="username">Username</FormLabel>
+            <Input
+              id="username"
               value={username}
               onChange={e => setUsername(e.target.value)}
               required
               autoFocus
             />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Password</label>
-            <input
-              className="input input-bordered w-full"
+          </FormItem>
+          <FormItem>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <Input
+              id="password"
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
             />
-          </div>
+          </FormItem>
           {error && <div className="text-destructive text-sm">{error}</div>}
-          <button
-            className="btn btn-primary w-full"
+          <Button
+            className="w-full"
             type="submit"
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}
-          </button>
+          </Button>
         </form>
       </div>
     </div>
