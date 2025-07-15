@@ -22,6 +22,7 @@ function LoginPage() {
     setLoading(true);
     setError(null);
     try {
+      // TODO: Replace with Tanstack
       const res = await fetch('http://localhost:3000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
