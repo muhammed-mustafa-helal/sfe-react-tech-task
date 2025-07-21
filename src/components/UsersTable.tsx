@@ -1,28 +1,18 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useUsers } from "../hooks/useUsers";
+import { useUserDelete } from "../hooks/useUserDelete";
 import type { User } from "../store/users";
 
-interface UsersTableProps {
-  users: User[];
-  onDelete: (id: number) => void;
-  isDeleting: boolean;
-}
+export function UsersTable() {
+  const { users, isLoading, error } = useUsers();
+  const { deleteUser, isDeleting } = useUserDelete();
 
-export function UsersTable({ users, onDelete, isDeleting }: UsersTableProps) {
+  if (isLoading) return <p>Loading users...</p>;
+  if (error) return <p className="text-destructive">{(error as Error).message}</p>;
+
   return (
     <Table>
       <TableHeader>
@@ -34,7 +24,7 @@ export function UsersTable({ users, onDelete, isDeleting }: UsersTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.map((user) => (
+        {users.map((user: User) => (
           <TableRow key={user.id}>
             <TableCell>{user.id}</TableCell>
             <TableCell>{user.username}</TableCell>
@@ -53,7 +43,7 @@ export function UsersTable({ users, onDelete, isDeleting }: UsersTableProps) {
                     Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => onDelete(user.id)}
+                    onClick={() => deleteUser(user.id)}
                     disabled={isDeleting}
                   >
                     <Trash2 className="w-2 h-2 mr-1 text-red-500" />
