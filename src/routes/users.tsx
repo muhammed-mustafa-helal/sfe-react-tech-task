@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useAuthStore } from '../store/auth';
 import { Button } from '@/components/ui/button';
+import { createProtectedRoute } from '../lib/auth-guard';
 
 export const Route = createFileRoute('/users')({
+  ...createProtectedRoute(),
   component: UsersListPage,
 });
 
@@ -10,8 +12,10 @@ function UsersListPage() {
   const logout = useAuthStore((s) => s.logout);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     logout();
+    // Small delay to ensure localStorage is cleared
+    await new Promise(resolve => setTimeout(resolve, 100));
     navigate({ 
       to: '/login',
       search: { redirect: undefined }

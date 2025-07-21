@@ -4,7 +4,7 @@ import { FormItem, FormLabel, FormField, FormMessage } from '@/components/ui/for
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm, FormProvider } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export const Route = createFileRoute('/login')({
   beforeLoad: async () => {

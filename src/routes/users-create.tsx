@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { createProtectedRoute } from '../lib/auth-guard';
 
 export const Route = createFileRoute('/users-create')({
+  ...createProtectedRoute(),
   component: UserCreatePage,
 });
 
