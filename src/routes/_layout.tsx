@@ -1,6 +1,19 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
-// TODO: Implement route protection here (redirect to /login if not authenticated)
-// You can use Zustand store (src/store/auth.ts) for auth state
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
+import { useAuthStore } from '../store/auth';
+
 export const Route = createFileRoute('/_layout')({
+  beforeLoad: async ({ location }) => {
+    const isAuthenticated = useAuthStore.getState().isAuthenticated();
+    
+    if (!isAuthenticated) {
+      throw redirect({
+        to: '/login',
+        search: {
+          // Store the current location to redirect back after login
+          redirect: location.href,
+        },
+      });
+    }
+  },
   component: () => <Outlet />,
 });

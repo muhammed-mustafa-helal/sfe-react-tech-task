@@ -11,6 +11,8 @@
     "router:generate": "tanstack-router-cli generate"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
+    "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/vite": "^4.1.11",
@@ -21,8 +23,10 @@
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.60.0",
     "tailwind-merge": "^3.3.1",
     "vibe-rules": "^0.3.50",
+    "zod": "^4.0.5",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
