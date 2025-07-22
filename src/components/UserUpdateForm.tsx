@@ -47,6 +47,11 @@ export function UserUpdateForm({ userId, onSuccess }: UserUpdateFormProps) {
   return (
     <FormProvider {...methods}>
       <form className="space-y-4" onSubmit={methods.handleSubmit(onSubmit)}>
+        {methods.formState.isSubmitSuccessful && (
+          <div className="mb-4 rounded-md bg-green-100 border border-green-300 text-green-800 px-4 py-2 text-center font-medium">
+            User updated successfully
+          </div>
+        )}
         <FormField
           control={methods.control}
           name="username"

@@ -5,11 +5,7 @@ import { FormField, FormItem, FormLabel, FormMessage, FormControl } from '@/comp
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import { useUserCreate } from '../hooks/useUserCreate';
 
-interface UserCreateFormProps {
-  onSuccess: () => void;
-}
-
-export function UserCreateForm({ onSuccess }: UserCreateFormProps) {
+export function UserCreateForm() {
   const methods = useForm({
     defaultValues: { username: '', password: '', role: '' },
     mode: 'onChange',
@@ -18,12 +14,16 @@ export function UserCreateForm({ onSuccess }: UserCreateFormProps) {
 
   const onSubmit = async (values: { username: string; password: string; role: string }) => {
     await mutation.mutateAsync(values);
-    if (!mutation.error) onSuccess();
   };
 
   return (
     <FormProvider {...methods}>
       <form className="space-y-4" onSubmit={methods.handleSubmit(onSubmit)}>
+        {methods.formState.isSubmitSuccessful && (
+          <div className="mb-4 rounded-md bg-green-100 border border-green-300 text-green-800 px-4 py-2 text-center font-medium">
+            User created successfully
+          </div>
+        )}
         <FormField
           control={methods.control}
           name="username"
