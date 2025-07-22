@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { userUpdateSchema } from '../lib/validation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FormField, FormItem, FormLabel, FormMessage, FormControl } from '@/components/ui/form';
@@ -8,12 +10,12 @@ import { useUserUpdate } from '../hooks/useUserUpdate';
 
 interface UserUpdateFormProps {
   userId: number;
-  onSuccess?: () => void;
 }
 
-export function UserUpdateForm({ userId, onSuccess }: UserUpdateFormProps) {
+export function UserUpdateForm({ userId }: UserUpdateFormProps) {
   const { user, isLoading, error, updateUser, isUpdating } = useUserUpdate(userId);
   const methods = useForm({
+    resolver: zodResolver(userUpdateSchema),
     defaultValues: { username: '', password: '', role: '' },
     mode: 'onChange',
   });
@@ -28,16 +30,16 @@ export function UserUpdateForm({ userId, onSuccess }: UserUpdateFormProps) {
 
   const isAnyFieldChanged = user && (
     watched.username !== user.username ||
-    watched.password.length > 0 ||
+    (watched.password && watched.password.length > 0) ||
     watched.role !== user.role
   );
 
-  const onSubmit = async (values: { username: string; password: string; role: string }) => {
+  const onSubmit = async (values: { username: string; password?: string; role: string }) => {
     const updateFields: any = {};
     if (values.username !== user?.username) updateFields.username = values.username;
     if (values.password) updateFields.password = values.password;
     if (values.role !== user?.role) updateFields.role = values.role;
-    updateUser(updateFields, { onSuccess });
+    updateUser(updateFields);
   };
 
   if (isLoading) return <p>Loading user...</p>;
@@ -55,21 +57,6 @@ export function UserUpdateForm({ userId, onSuccess }: UserUpdateFormProps) {
         <FormField
           control={methods.control}
           name="username"
-          rules={{
-            required: "Username is required",
-            minLength: {
-              value: 5,
-              message: "Username must be 5 characters or more",
-            },
-            pattern: {
-              value: /^[a-zA-Z0-9]+$/,
-              message: "Username can't contain special characters",
-            },
-            validate: {
-              notStartWithNumber: v => !/^[0-9]/.test(v) || "Username cannot start with a number",
-              noTest: v => !/test/i.test(v) || "Username must be a real name",
-            },
-          }}
           render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel htmlFor="username">
@@ -85,12 +72,6 @@ export function UserUpdateForm({ userId, onSuccess }: UserUpdateFormProps) {
         <FormField
           control={methods.control}
           name="password"
-          rules={{
-            minLength: {
-              value: 8,
-              message: "Password must be at least 8 characters long",
-            },
-          }}
           render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel htmlFor="password">
@@ -106,7 +87,6 @@ export function UserUpdateForm({ userId, onSuccess }: UserUpdateFormProps) {
         <FormField
           control={methods.control}
           name="role"
-          rules={{ required: "Role is required" }}
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="role">Role</FormLabel>

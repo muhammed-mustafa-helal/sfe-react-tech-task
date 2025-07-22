@@ -8,23 +8,13 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsersIndexRouteImport } from './routes/users/index'
 import { Route as UsersCreateRouteImport } from './routes/users/create'
-import { Route as UsersLayoutRouteImport } from './routes/users/_layout'
 import { Route as UsersUserIdRouteImport } from './routes/users/$userId'
 
-const UsersRouteImport = createFileRoute('/users')()
-
-const UsersRoute = UsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -36,18 +26,14 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const UsersIndexRoute = UsersIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => UsersRoute,
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const UsersCreateRoute = UsersCreateRouteImport.update({
-  id: '/create',
-  path: '/create',
-  getParentRoute: () => UsersRoute,
-} as any)
-const UsersLayoutRoute = UsersLayoutRouteImport.update({
-  id: '/_layout',
-  getParentRoute: () => UsersRoute,
+  id: '/users/create',
+  path: '/users/create',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const UsersUserIdRoute = UsersUserIdRouteImport.update({
   id: '/users/$userId',
@@ -59,45 +45,34 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
-  '/users': typeof UsersLayoutRoute
   '/users/create': typeof UsersCreateRoute
-  '/users/': typeof UsersIndexRoute
+  '/users': typeof UsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
-  '/users': typeof UsersIndexRoute
   '/users/create': typeof UsersCreateRoute
+  '/users': typeof UsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
-  '/users': typeof UsersRouteWithChildren
-  '/users/_layout': typeof UsersLayoutRoute
   '/users/create': typeof UsersCreateRoute
   '/users/': typeof UsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/login'
-    | '/users/$userId'
-    | '/users'
-    | '/users/create'
-    | '/users/'
+  fullPaths: '/' | '/login' | '/users/$userId' | '/users/create' | '/users'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/users/$userId' | '/users' | '/users/create'
+  to: '/' | '/login' | '/users/$userId' | '/users/create' | '/users'
   id:
     | '__root__'
     | '/'
     | '/login'
     | '/users/$userId'
-    | '/users'
-    | '/users/_layout'
     | '/users/create'
     | '/users/'
   fileRoutesById: FileRoutesById
@@ -106,18 +81,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   UsersUserIdRoute: typeof UsersUserIdRoute
-  UsersRoute: typeof UsersRouteWithChildren
+  UsersCreateRoute: typeof UsersCreateRoute
+  UsersIndexRoute: typeof UsersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/users': {
-      id: '/users'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof UsersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -134,24 +103,17 @@ declare module '@tanstack/react-router' {
     }
     '/users/': {
       id: '/users/'
-      path: '/'
-      fullPath: '/users/'
+      path: '/users'
+      fullPath: '/users'
       preLoaderRoute: typeof UsersIndexRouteImport
-      parentRoute: typeof UsersRoute
+      parentRoute: typeof rootRouteImport
     }
     '/users/create': {
       id: '/users/create'
-      path: '/create'
+      path: '/users/create'
       fullPath: '/users/create'
       preLoaderRoute: typeof UsersCreateRouteImport
-      parentRoute: typeof UsersRoute
-    }
-    '/users/_layout': {
-      id: '/users/_layout'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof UsersLayoutRouteImport
-      parentRoute: typeof UsersRoute
+      parentRoute: typeof rootRouteImport
     }
     '/users/$userId': {
       id: '/users/$userId'
@@ -163,25 +125,12 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface UsersRouteChildren {
-  UsersLayoutRoute: typeof UsersLayoutRoute
-  UsersCreateRoute: typeof UsersCreateRoute
-  UsersIndexRoute: typeof UsersIndexRoute
-}
-
-const UsersRouteChildren: UsersRouteChildren = {
-  UsersLayoutRoute: UsersLayoutRoute,
-  UsersCreateRoute: UsersCreateRoute,
-  UsersIndexRoute: UsersIndexRoute,
-}
-
-const UsersRouteWithChildren = UsersRoute._addFileChildren(UsersRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   UsersUserIdRoute: UsersUserIdRoute,
-  UsersRoute: UsersRouteWithChildren,
+  UsersCreateRoute: UsersCreateRoute,
+  UsersIndexRoute: UsersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

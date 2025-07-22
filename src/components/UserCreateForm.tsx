@@ -1,4 +1,6 @@
 import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { userCreateSchema } from '../lib/validation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FormField, FormItem, FormLabel, FormMessage, FormControl } from '@/components/ui/form';
@@ -7,6 +9,7 @@ import { useUserCreate } from '../hooks/useUserCreate';
 
 export function UserCreateForm() {
   const methods = useForm({
+    resolver: zodResolver(userCreateSchema),
     defaultValues: { username: '', password: '', role: '' },
     mode: 'onChange',
   });
@@ -27,21 +30,6 @@ export function UserCreateForm() {
         <FormField
           control={methods.control}
           name="username"
-          rules={{
-            required: "Username is required",
-            minLength: {
-              value: 5,
-              message: "Username must be 5 characters or more",
-            },
-            pattern: {
-              value: /^[a-zA-Z0-9]+$/,
-              message: "Username can't contain special characters",
-            },
-            validate: {
-              notStartWithNumber: v => !/^[0-9]/.test(v) || "Username cannot start with a number",
-              noTest: v => !/test/i.test(v) || "Username must be a real name",
-            },
-          }}
           render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel htmlFor="username">
@@ -57,13 +45,6 @@ export function UserCreateForm() {
         <FormField
           control={methods.control}
           name="password"
-          rules={{
-            required: "Password is required",
-            minLength: {
-              value: 8,
-              message: "Password must be at least 8 characters long",
-            },
-          }}
           render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel htmlFor="password">
@@ -79,7 +60,6 @@ export function UserCreateForm() {
         <FormField
           control={methods.control}
           name="role"
-          rules={{ required: "Role is required" }}
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="role">

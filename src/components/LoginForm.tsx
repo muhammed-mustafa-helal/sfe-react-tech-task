@@ -1,4 +1,6 @@
 import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema } from '../lib/validation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FormField, FormItem, FormLabel, FormMessage, FormControl } from '@/components/ui/form';
@@ -9,7 +11,11 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const methods = useForm({ defaultValues: { username: '', password: '' } });
+  const methods = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { username: '', password: '' },
+    mode: 'onChange',
+  });
   const loginMutation = useLogin();
 
   const onSubmit = async (values: { username: string; password: string }) => {
@@ -23,7 +29,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <FormField
           name="username"
           control={methods.control}
-          rules={{ required: "Username is required" }}
           render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel htmlFor="username">
@@ -39,7 +44,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <FormField
           name="password"
           control={methods.control}
-          rules={{ required: "Password is required" }}
           render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel htmlFor="password">
