@@ -1,10 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "../store/auth";
-import { createProtectedRoute } from "../lib/auth-guard";
+import { useAuthStore } from "../../store/auth";
+import { createProtectedRoute } from "../../lib/auth-guard";
 import { UsersTable } from "@/components/UsersTable";
 
-export const Route = createFileRoute("/users")({
+export const Route = createFileRoute('/users/')({
   ...createProtectedRoute(),
   component: UsersListPage,
 });

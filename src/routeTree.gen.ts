@@ -8,23 +8,17 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as UsersCreateRouteImport } from './routes/users-create'
-import { Route as UsersUserIdRouteImport } from './routes/users-$userId'
-import { Route as UsersRouteImport } from './routes/users'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as LayoutRouteImport } from './routes/_layout'
+import { createFileRoute } from '@tanstack/react-router'
 
-const UsersCreateRoute = UsersCreateRouteImport.update({
-  id: '/users-create',
-  path: '/users-create',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UsersUserIdRoute = UsersUserIdRouteImport.update({
-  id: '/users-$userId',
-  path: '/users-$userId',
-  getParentRoute: () => rootRouteImport,
-} as any)
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as UsersIndexRouteImport } from './routes/users/index'
+import { Route as UsersCreateRouteImport } from './routes/users/create'
+import { Route as UsersLayoutRouteImport } from './routes/users/_layout'
+import { Route as UsersUserIdRouteImport } from './routes/users/$userId'
+
+const UsersRouteImport = createFileRoute('/users')()
+
 const UsersRoute = UsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -35,69 +29,76 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutRoute = LayoutRouteImport.update({
+const UsersIndexRoute = UsersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UsersRoute,
+} as any)
+const UsersCreateRoute = UsersCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => UsersRoute,
+} as any)
+const UsersLayoutRoute = UsersLayoutRouteImport.update({
   id: '/_layout',
+  getParentRoute: () => UsersRoute,
+} as any)
+const UsersUserIdRoute = UsersUserIdRouteImport.update({
+  id: '/users/$userId',
+  path: '/users/$userId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
-  '/users': typeof UsersRoute
-  '/users-$userId': typeof UsersUserIdRoute
-  '/users-create': typeof UsersCreateRoute
+  '/users/$userId': typeof UsersUserIdRoute
+  '/users': typeof UsersLayoutRoute
+  '/users/create': typeof UsersCreateRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
-  '/users': typeof UsersRoute
-  '/users-$userId': typeof UsersUserIdRoute
-  '/users-create': typeof UsersCreateRoute
+  '/users/$userId': typeof UsersUserIdRoute
+  '/users': typeof UsersIndexRoute
+  '/users/create': typeof UsersCreateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_layout': typeof LayoutRoute
   '/login': typeof LoginRoute
-  '/users': typeof UsersRoute
-  '/users-$userId': typeof UsersUserIdRoute
-  '/users-create': typeof UsersCreateRoute
+  '/users/$userId': typeof UsersUserIdRoute
+  '/users': typeof UsersRouteWithChildren
+  '/users/_layout': typeof UsersLayoutRoute
+  '/users/create': typeof UsersCreateRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/users' | '/users-$userId' | '/users-create'
+  fullPaths:
+    | '/login'
+    | '/users/$userId'
+    | '/users'
+    | '/users/create'
+    | '/users/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/users' | '/users-$userId' | '/users-create'
+  to: '/login' | '/users/$userId' | '/users' | '/users/create'
   id:
     | '__root__'
-    | '/_layout'
     | '/login'
+    | '/users/$userId'
     | '/users'
-    | '/users-$userId'
-    | '/users-create'
+    | '/users/_layout'
+    | '/users/create'
+    | '/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  LayoutRoute: typeof LayoutRoute
   LoginRoute: typeof LoginRoute
-  UsersRoute: typeof UsersRoute
   UsersUserIdRoute: typeof UsersUserIdRoute
-  UsersCreateRoute: typeof UsersCreateRoute
+  UsersRoute: typeof UsersRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/users-create': {
-      id: '/users-create'
-      path: '/users-create'
-      fullPath: '/users-create'
-      preLoaderRoute: typeof UsersCreateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/users-$userId': {
-      id: '/users-$userId'
-      path: '/users-$userId'
-      fullPath: '/users-$userId'
-      preLoaderRoute: typeof UsersUserIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/users': {
       id: '/users'
       path: '/users'
@@ -112,22 +113,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_layout': {
-      id: '/_layout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof LayoutRouteImport
+    '/users/': {
+      id: '/users/'
+      path: '/'
+      fullPath: '/users/'
+      preLoaderRoute: typeof UsersIndexRouteImport
+      parentRoute: typeof UsersRoute
+    }
+    '/users/create': {
+      id: '/users/create'
+      path: '/create'
+      fullPath: '/users/create'
+      preLoaderRoute: typeof UsersCreateRouteImport
+      parentRoute: typeof UsersRoute
+    }
+    '/users/_layout': {
+      id: '/users/_layout'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersLayoutRouteImport
+      parentRoute: typeof UsersRoute
+    }
+    '/users/$userId': {
+      id: '/users/$userId'
+      path: '/users/$userId'
+      fullPath: '/users/$userId'
+      preLoaderRoute: typeof UsersUserIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
-  LayoutRoute: LayoutRoute,
-  LoginRoute: LoginRoute,
-  UsersRoute: UsersRoute,
-  UsersUserIdRoute: UsersUserIdRoute,
+interface UsersRouteChildren {
+  UsersLayoutRoute: typeof UsersLayoutRoute
+  UsersCreateRoute: typeof UsersCreateRoute
+  UsersIndexRoute: typeof UsersIndexRoute
+}
+
+const UsersRouteChildren: UsersRouteChildren = {
+  UsersLayoutRoute: UsersLayoutRoute,
   UsersCreateRoute: UsersCreateRoute,
+  UsersIndexRoute: UsersIndexRoute,
+}
+
+const UsersRouteWithChildren = UsersRoute._addFileChildren(UsersRouteChildren)
+
+const rootRouteChildren: RootRouteChildren = {
+  LoginRoute: LoginRoute,
+  UsersUserIdRoute: UsersUserIdRoute,
+  UsersRoute: UsersRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

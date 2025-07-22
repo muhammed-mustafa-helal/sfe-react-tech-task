@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { useUsers } from "../hooks/useUsers";
 import { useUserDelete } from "../hooks/useUserDelete";
 import type { User } from "../store/users";
+import { useNavigate } from "@tanstack/react-router";
 
 export function UsersTable() {
   const { users, isLoading, error } = useUsers();
   const { deleteUser, isDeleting } = useUserDelete();
+  const navigate = useNavigate();
 
   if (isLoading) return <p>Loading users...</p>;
   if (error) return <p className="text-destructive">{(error as Error).message}</p>;
@@ -38,7 +40,9 @@ export function UsersTable() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => navigate({ to: "/users/$userId", params: { userId: String(user.id) } })}
+                  >
                     <Pencil className="w-2 h-2 mr-1 text-red-500" />
                     Edit
                   </DropdownMenuItem>
