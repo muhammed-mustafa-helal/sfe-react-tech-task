@@ -3,7 +3,8 @@ import { persist } from 'zustand/middleware';
 
 interface AuthState {
   token: string | null;
-  setToken: (token: string | null) => void;
+  authenticatedUser: { id: number; username: string; role: string } | null;
+  setAuth: (token: string | null, authenticatedUser: { id: number; username: string; role: string } | null) => void;
   logout: () => void;
   isAuthenticated: () => boolean;
 }
@@ -12,9 +13,10 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set, get, api) => ({
       token: null,
-      setToken: (token) => set({ token }),
+      authenticatedUser: null,
+      setAuth: (token, authenticatedUser) => set({ token, authenticatedUser }),
       logout: () => {
-        set({ token: null });
+        set({ token: null, authenticatedUser: null });
         api.persist.clearStorage();
         localStorage.removeItem('auth-storage');
       },

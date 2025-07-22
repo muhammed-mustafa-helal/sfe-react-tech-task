@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useAuthStore } from '../store/auth';
 
 export function useLogin() {
-  const setToken = useAuthStore((s) => s.setToken);
+  const setAuth = useAuthStore((s) => s.setAuth);
 
   const loginMutation = useMutation({
     mutationFn: async (values: { username: string; password: string }) => {
@@ -18,7 +18,7 @@ export function useLogin() {
       return res.json();
     },
     onSuccess: (data) => {
-      setToken(data.token);
+      setAuth(data.token, data.user);
     },
   });
 

@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { createProtectedRoute } from '../../lib/auth-guard';
+import { createAdminRoute } from '../../lib/auth-guard';
 import { UserUpdateForm } from '@/components/UserUpdateForm';
 import { useParams } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/users/$userId')({
-  ...createProtectedRoute(),
+  ...createAdminRoute(),
   component: UserEditPage,
 });
 

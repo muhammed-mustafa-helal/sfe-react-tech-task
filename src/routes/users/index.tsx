@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createProtectedRoute } from "../../lib/auth-guard";
+import { createAdminRoute } from "../../lib/auth-guard";
 import { UsersTable } from "@/components/UsersTable";
 
 export const Route = createFileRoute('/users/')({
-  ...createProtectedRoute(),
+  ...createAdminRoute(),
   component: UsersListPage,
 });
 
