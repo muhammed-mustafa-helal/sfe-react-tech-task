@@ -11,10 +11,6 @@ export const Route = createRootRoute({
           to: '/login',
           search: { redirect: undefined }
         });
-      } else {
-        throw redirect({
-          to: '/users',
-        });
       }
     }
   },

@@ -12,6 +12,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsersIndexRouteImport } from './routes/users/index'
 import { Route as UsersCreateRouteImport } from './routes/users/create'
 import { Route as UsersLayoutRouteImport } from './routes/users/_layout'
@@ -27,6 +28,11 @@ const UsersRoute = UsersRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UsersIndexRoute = UsersIndexRouteImport.update({
@@ -50,6 +56,7 @@ const UsersUserIdRoute = UsersUserIdRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users': typeof UsersLayoutRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/users/': typeof UsersIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users': typeof UsersIndexRoute
@@ -64,6 +72,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users': typeof UsersRouteWithChildren
@@ -74,15 +83,17 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/login'
     | '/users/$userId'
     | '/users'
     | '/users/create'
     | '/users/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/users/$userId' | '/users' | '/users/create'
+  to: '/' | '/login' | '/users/$userId' | '/users' | '/users/create'
   id:
     | '__root__'
+    | '/'
     | '/login'
     | '/users/$userId'
     | '/users'
@@ -92,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   UsersUserIdRoute: typeof UsersUserIdRoute
   UsersRoute: typeof UsersRouteWithChildren
@@ -111,6 +123,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/users/': {
@@ -159,6 +178,7 @@ const UsersRouteChildren: UsersRouteChildren = {
 const UsersRouteWithChildren = UsersRoute._addFileChildren(UsersRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   UsersUserIdRoute: UsersUserIdRoute,
   UsersRoute: UsersRouteWithChildren,

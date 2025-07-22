@@ -27,7 +27,7 @@ function LoginPage() {
         <h1 className="text-2xl font-bold mb-6">Login</h1>
         <LoginForm
           onSuccess={() => {
-            const redirectTo = search.redirect || '/users';
+            const redirectTo = search.redirect || '/';
             navigate({ to: redirectTo as any });
           }}
         />

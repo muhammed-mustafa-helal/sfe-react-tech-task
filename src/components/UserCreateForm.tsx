@@ -80,9 +80,11 @@ export function UserCreateForm() {
           control={methods.control}
           name="role"
           rules={{ required: "Role is required" }}
-          render={({ field }: { field: any }) => (
+          render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="role">Role</FormLabel>
+              <FormLabel htmlFor="role">
+                Role <span className="text-destructive">*</span>
+              </FormLabel>
               <FormControl>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger id="role">
